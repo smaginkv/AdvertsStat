@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Spring Boot Adverts</title>
+<link href="../static/css/main.css" th:href="@{/css/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+	<div id="header" th:include="page :: header"></div>
+
+	<h2>Spring Boot Adverts</h2>
+
+	<form th:object="${advert}" method="post">
+		<label for="model">model:</label> <select th:field="*{model}">
+			<option value="">--</option>
+			<option th:each="part:${allModels}" th:value="${{part}}" th:text="${part}">Wireframe</option>
+		</select><br /> <label for="productionYear">production year:</label> <input	type="text" th:field="*{productionYear}"></input><br /> 
+		<label for="engineCapacity">engine capacity:</label> <input type="text"	th:field="*{engineCapacity}"></input><br /> 
+		<input type="submit"></input>
+
+	</form>
+
+	<div id="footer" th:include="page :: footer"></div>
+</body>
+</html>

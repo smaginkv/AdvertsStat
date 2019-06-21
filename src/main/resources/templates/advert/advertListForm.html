@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Spring Boot Adverts</title>
+<link href="../static/css/main.css" th:href="@{/css/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+	<div id="header" th:include="page :: header"></div>
+
+	<h1>Spring Boot Adverts</h1>
+
+	<a href="" th:href="@{/advert/new}">Add new</a>
+
+	<ul th:each="advert : ${adverts}">
+		<li><a href="" th:href="@{/advert/}+${advert.id}"><span
+				th:text="${advert.model}">model</span>: <span
+				th:text="${advert.productionYear}">production year</span> : <span
+				th:text="${advert.engineCapacity}">engine capacity</span> 
+		</a></li>
+	</ul>
+
+	<div id="footer" th:include="page :: footer"></div>
+</body>
+</html>
