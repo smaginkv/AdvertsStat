@@ -22,8 +22,13 @@ public class ModelRepository {
 		return (List<Model>) manager.createQuery("select s from Model s").getResultList();
 	}
 
-	public Model save(Model model) {
-		manager.persist(model);
+	public Model save(Model model, boolean update) {
+		
+		if (update) {
+			manager.merge(model);
+		} else {
+			manager.persist(model);
+		}
 		return model;
 	}
 	

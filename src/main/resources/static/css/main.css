@@ -1,42 +1,55 @@
 body {
-  background-color: #eeeeee;
-  font-family: sans-serif;
+    background-color: #FFFFFF;
 }
 
 label {
-  display: inline-block;
-  width: 120px;
-  text-align: right;
+    display: inline-block;
+    width: 120px;
+    text-align: right;
 }
 
 ul {
-  list-style: none; 
-  margin: 0;
-  padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.topmenu > li {
-  display: inline-block;
-  margin-right: 20px;
-  position: relative;
+.topmenu>li {
+    display: inline-block;
+    margin-right: 20px;
+    position: relative;
 }
+
 a {
-  display: block;
-  padding: 10px 15px;
+    display: block;
+    padding: 10px 15px;
+    color: black;
+    font-style: normal;
 }
+
+a:visited {
+    color: black;
+}
+
+a:active {
+    color: black;
+}
+
 .submenu {
-  position: absolute;
-  padding-left: 10px;
+    position: absolute;
+    padding-left: 10px;
 }
 
 nav ul {
-  background: #F5F2DD;
-  color: #413003;
+    background: #EFE7DE;
+    color: #413003;
 }
+
 nav .submenu {
-  display: none;
-  background: #FFFBF0;
+    display: none;
+    background: #FFFBF0;
 }
+
 nav ul li:hover .submenu {
-  display: block;
+    display: block;
 }

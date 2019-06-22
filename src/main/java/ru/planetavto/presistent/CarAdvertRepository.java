@@ -22,8 +22,12 @@ public class CarAdvertRepository {
 		return (List<CarAdvert>) entityManager.createQuery("select s from CarAdvert s").getResultList();
 	}
 
-	public CarAdvert save(CarAdvert advert) {
-		entityManager.persist(advert);
+	public CarAdvert save(CarAdvert advert, boolean update) {
+		if (update) {
+			entityManager.merge(advert);
+		} else {
+			entityManager.persist(advert);
+		}
 		return advert;
 	}
 	

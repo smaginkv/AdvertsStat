@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.planetavto.advertsment.Model;
+import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.presistent.ModelRepository;
 
 @Controller
@@ -32,7 +33,7 @@ public class ModelController {
 	
 	@RequestMapping(value ="/model/new",  method=RequestMethod.POST)
 	public String saveNewAdvert(Model model) {
-		modelRepo.save(model);		
+		modelRepo.save(model, false);		
 		return "redirect:/model";
 	}
 	
@@ -42,4 +43,11 @@ public class ModelController {
 		model.put("model", carModel);
 		return "model/modelUnitForm";
 	}
+	
+	@RequestMapping(value = "/model/{modelId}", method=RequestMethod.POST)
+	public String updateTargetModel(@PathVariable String modelId, Model model) {
+		model.setId(Long.parseLong(modelId));
+		modelRepo.save(model, true);
+		return "redirect:/model";
+	}	
 }

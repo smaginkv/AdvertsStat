@@ -9,11 +9,13 @@
 <body>
 	<div id="header" th:include="page :: header"></div>
 
-	<h1>Spring Boot Adverts</h1>
+    <h1>Spring Boot Adverts</h1>
 
-	<a href="" th:href="@{/advert/new}">Add new</a>
+    <form th:action="@{/advert/new}">
+        <button type="submit">Add new</button>
+    </form>
 
-	<ul th:each="advert : ${adverts}">
+    <ul th:each="advert : ${adverts}">
 		<li><a href="" th:href="@{/advert/}+${advert.id}"><span
 				th:text="${advert.model}">model</span>: <span
 				th:text="${advert.productionYear}">production year</span> : <span
