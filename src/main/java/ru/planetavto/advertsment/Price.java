@@ -4,19 +4,21 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
-import ru.planetavto.advertsment.car.CarAdvert;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 @Embeddable
 public class Price {
+	
+	public Price() {
+		date = LocalDate.now();
+	}
 
-	@Column(columnDefinition="Decimal(15,2)")
+	@NumberFormat(pattern = "###,000")
 	private int price;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate date;  
 		
 	public int getPrice() {
@@ -30,8 +32,7 @@ public class Price {
 	}
 	public void setDate(LocalDate date) {
 		this.date = date;
-	}
-	
+	}	
 	@Override
     public String toString() {
         return "Price [date=" + this.date + ", price=" + this.price + "]";

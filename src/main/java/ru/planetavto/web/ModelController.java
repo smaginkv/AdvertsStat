@@ -10,41 +10,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.planetavto.advertsment.Model;
-import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.presistent.ModelRepository;
 
 @Controller
+@RequestMapping(value = "/model")
 public class ModelController {
-	@Autowired
+	
 	private ModelRepository modelRepo;
 	
-	@RequestMapping(value = "/model", method=RequestMethod.GET)
+	@Autowired	
+	public ModelController(ModelRepository modelRepo) {
+		this.modelRepo = modelRepo;
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
 	public String goToAdvertListForm(Map<String,Object> model) {
 		List<Model> models = modelRepo.findAll();
 		model.put("models", models);
 		return "model/modelListForm";
 	}
 
-	@RequestMapping(value ="/model/new",  method=RequestMethod.GET)
+	@RequestMapping(value ="/new",  method=RequestMethod.GET)
 	public String newAdvert(Map<String,Object> model) {	
 		model.put("model", new Model());
 		return "model/modelUnitForm";
 	}
 	
-	@RequestMapping(value ="/model/new",  method=RequestMethod.POST)
+	@RequestMapping(value ="/new",  method=RequestMethod.POST)
 	public String saveNewAdvert(Model model) {
 		modelRepo.save(model, false);		
 		return "redirect:/model";
 	}
 	
-	@RequestMapping(value = "/model/{modelId}", method=RequestMethod.GET)
+	@RequestMapping(value = "/{modelId}", method=RequestMethod.GET)
 	public String modelListForm(@PathVariable String modelId, Map<String,Object> model) {
 		Model carModel = modelRepo.findById(Long.parseLong(modelId));
 		model.put("model", carModel);
 		return "model/modelUnitForm";
 	}
 	
-	@RequestMapping(value = "/model/{modelId}", method=RequestMethod.POST)
+	@RequestMapping(value = "/{modelId}", method=RequestMethod.POST)
 	public String updateTargetModel(@PathVariable String modelId, Model model) {
 		model.setId(Long.parseLong(modelId));
 		modelRepo.save(model, true);

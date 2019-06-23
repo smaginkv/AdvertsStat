@@ -20,31 +20,53 @@
                 th:text="${part}">
             </option>
 		</select><br /> <label for="productionYear">production year:</label> <input	type="text" th:field="*{productionYear}"></input><br /> 
-		<label for="engineCapacity">engine capacity:</label> <input type="text"	th:field="*{engineCapacity}"></input><br/>        
-            
+		<label for="engineCapacity">engine capacity:</label> <input type="text"	th:field="*{engineCapacity}"></input><br/>
+
+        <br>
         <div>
-            <label>Prices</label>
             <table>
-              <thead>
+                <caption><b>Prices</caption>
+                <thead>
                 <tr>
-                  <th>Row</th>
-                  <th>Date</th>
-                  <th>Price</th>                  
-                  <th><button type="submit" name="addPrice">Add price</button></th>
+                    <td></td>
+                        <td>
+                            <button type="submit" name="addPrice">
+                                <img
+                                    src="..\..\..\webapp\resources\images\insert.png"
+                                    alt="insert"
+                                    th:src="@{/resources/images/insert.png}"
+                                    style="vertical-align: middle"/>
+                            </button>
+                        </td>
+                    </tr>
+                <tr>
+
+                    <th>N</th>
+                    <th>Date</th>
+                    <th>Price</th>
                 </tr>
-              </thead>
-              <tbody>
-                <tr th:each="price,priceStat : *{prices}">
-                  <td th:text="${priceStat.count}">1</td>
-                  <td><input type="text" th:field="*{prices[__${priceStat.index}__].date}"/></td>
-                  <td><input type="text" th:field="*{prices[__${priceStat.index}__].price}"/></td>
-                  <td><button type="submit" name="removePrice" th:value="${priceStat.index}">Remove price</button></td>
-                </tr>
-              </tbody>
+                </thead>
+                <tbody>
+                    <tr th:each="price,priceStat : *{prices}">
+                        <td th:text="${priceStat.count}">1</td>
+                        <td><input type="date"
+                            th:field="*{prices[__${priceStat.index}__].date}" /></td>
+                        <td><input type="text"
+                            th:field="*{prices[__${priceStat.index}__].price}" /></td>
+                        <td><button type="submit"
+                                name="removePrice"
+                                th:value="${priceStat.index}">
+                                <img src="..\..\..\webapp\resources\images\remove.png" 
+                                th:src="@{/resources/images/remove.png}"
+                                alt="insert"
+                                 style="vertical-align: middle"/>
+                            </button></td>
+                    </tr>
+                </tbody>
             </table>
-          </div>    
-         
-        <button type="submit" name="saveAdvert">Save</button>
+        </div>
+
+        <button type="submit" name="saveAdvert">Save and close</button>
 	</form>
 
 	<div id="footer" th:include="page :: footer"></div>
