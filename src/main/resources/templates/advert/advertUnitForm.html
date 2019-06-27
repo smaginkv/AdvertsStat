@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Spring Boot Adverts</title>
-<link href="../static/css/main.css" th:href="@{/css/main.css}"
+<link href="../../static/main.css" th:href="@{/main.css}"
 	rel="stylesheet" />
 </head>
 
@@ -12,61 +12,69 @@
 	<h2>Spring Boot Adverts</h2>
 
 	<form th:object="${advert}" method="post">
-		<label for="model">model:</label> 
-        <select th:field="*{model.id}">
-			<option 
-                th:each="part : ${allModels}" 
-                th:value="${part.id}" 
-                th:text="${part}">
-            </option>
-		</select><br /> <label for="productionYear">production year:</label> <input	type="text" th:field="*{productionYear}"></input><br /> 
-		<label for="engineCapacity">engine capacity:</label> <input type="text"	th:field="*{engineCapacity}"></input><br/>
+		<label for="model">model:</label> <select th:field="*{model.id}">
+			<option th:each="part : ${allModels}" th:value="${part.id}"
+				th:text="${part}"></option>
+		</select>
+		<br />
+		<input type="hidden" name="id" th:field="*{id}"/>
+		<input type="hidden" name="image" th:field="*{image}"/> 
+		<label for="productionYear">production year:</label> 
+		<input type="text" th:field="*{productionYear}"></input>
+		<br /> 
+		
+		<label for="engineCapacity">engine capacity:</label>
+		<input type="text" th:field="*{engineCapacity}"></input>
+		<br/>
+		
+		<img th:src="*{'/img/' + id}" width="300"/> 
+			
+			<br>
+		<div>
+			<table rules="groups">
+				<caption>
+					<b>Prices
+				</caption>
+				<thead>
+					<tr>
+						<td></td>
+						<td>
+							<button type="submit" name="addPrice">
+								<img src="..\..\static\images\insert.png" alt="insert"
+									th:src="@{/images/insert.png}" style="vertical-align: middle" />
+							</button>
+						</td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th>N</th>
+						<th>Date</th>
+						<th>Price</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="price,priceStat : *{prices}">
+						<td th:text="${priceStat.count}">1</td>
+						<td><input type="date"
+							th:field="*{prices[__${priceStat.index}__].date}" /></td>
+						<td><input type="text"
+							th:field="*{prices[__${priceStat.index}__].price}" /></td>
+						<td><button type="submit" name="removePrice"
+								th:value="${priceStat.index}">
+								<img src="..\..\static\images\remove.png"
+									th:src="@{/images/remove.png}" alt="insert"
+									style="vertical-align: middle" />
+							</button></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-        <br>
-        <div>
-            <table>
-                <caption><b>Prices</caption>
-                <thead>
-                <tr>
-                    <td></td>
-                        <td>
-                            <button type="submit" name="addPrice">
-                                <img
-                                    src="..\..\..\webapp\resources\images\insert.png"
-                                    alt="insert"
-                                    th:src="@{/resources/images/insert.png}"
-                                    style="vertical-align: middle"/>
-                            </button>
-                        </td>
-                    </tr>
-                <tr>
-
-                    <th>N</th>
-                    <th>Date</th>
-                    <th>Price</th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="price,priceStat : *{prices}">
-                        <td th:text="${priceStat.count}">1</td>
-                        <td><input type="date"
-                            th:field="*{prices[__${priceStat.index}__].date}" /></td>
-                        <td><input type="text"
-                            th:field="*{prices[__${priceStat.index}__].price}" /></td>
-                        <td><button type="submit"
-                                name="removePrice"
-                                th:value="${priceStat.index}">
-                                <img src="..\..\..\webapp\resources\images\remove.png" 
-                                th:src="@{/resources/images/remove.png}"
-                                alt="insert"
-                                 style="vertical-align: middle"/>
-                            </button></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <button type="submit" name="saveAdvert">Save and close</button>
+		<br>
+		<button type="submit" name="saveAdvert">Save and close</button>
+		<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 	</form>
 
 	<div id="footer" th:include="page :: footer"></div>

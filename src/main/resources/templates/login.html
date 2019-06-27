@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Spring Boot Adverts</title>
+<link href="../static/main.css" th:href="@{/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+	<div id="header" th:include="page :: header"></div>
+
+	<h1>Login</h1>
+		To register, click <a href="" th:href="@{/register}">here</a>
+	<br/><br/>
+	
+	<form method="POST" th:action="@{/login}" id="loginForm">
+		<label for="username">Username: </label> 
+		<input type="text" name="username" id="username" />
+		<br/>
+		
+		<label for="password">Password: </label> 
+		<input type="password" name="password" id="password"/>
+		<br/>
+				
+    	<label for="remember_me" class="inline">Remember me</label>
+    	<input id="remember_me" name="remember-me" type="checkbox"/>
+		<br/><br/> 
+		
+		<input type="submit" value="Login" />
+		
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+	</form>
+
+	<div id="footer" th:include="page :: footer"></div>
+</body>
+</html>

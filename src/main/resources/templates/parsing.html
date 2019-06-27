@@ -9,14 +9,12 @@
 <body>
 	<div id="header" th:include="page :: header"></div>
 
-	<h1>Welcome to my application</h1>
-
-	<form method="POST" th:action="@{/logout}" id="logoutForm">
-		<input type="submit" value="Logout" />
-	</form>
-	<br>
-
+    <h2>Spring Boot Adverts</h2>
+    
+    <form method="POST" th:action="@{/parse}">
+    	<input type="submit" value="Parse" />
+    </form>
+    
 	<div id="footer" th:include="page :: footer"></div>
-
 </body>
 </html>

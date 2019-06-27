@@ -38,7 +38,7 @@ public class ModelController {
 	
 	@RequestMapping(value ="/new",  method=RequestMethod.POST)
 	public String saveNewAdvert(Model model) {
-		modelRepo.save(model, false);		
+		modelRepo.save(model, false);
 		return "redirect:/model";
 	}
 	

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Spring Boot Adverts</title>
+<link href="../static/main.css" th:href="@{/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+	<div id="header" th:include="page :: header"></div>
+
+    <h2>Spring Boot Adverts</h2>
+
+<form method="POST" th:action="@{/register}" id="registerForm">
+    
+        <label for="username">Username: </label>
+        <input type="text" name="username"/><br/>
+
+        <label for="password">Password: </label>
+        <input type="password" name="password"/><br/>
+
+        <label for="confirm">Confirm password: </label>
+        <input type="password" name="confirm"/><br/>
+    
+        <input type="submit" value="Register"/>
+    </form>
+    
+	<div id="footer" th:include="page :: footer"></div>
+</body>
+</html>
