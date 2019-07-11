@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,14 +30,20 @@ import ru.planetavto.presistent.ModelRepository;
 @Controller
 public class AdvertController {
 
-	@Autowired
 	private CarAdvertService advertRepo;
-	@Autowired
 	private ModelRepository modelRepo;
+	
+	@Autowired
+	public AdvertController(CarAdvertService advertRepo, ModelRepository modelRepo) {
+		this.advertRepo = advertRepo;
+		this.modelRepo  = modelRepo;
+	}
 	
 	@RequestMapping(value = "/advert", method=RequestMethod.GET)
 	public String getAdvertListForm(Model model, Pageable pageable) {
-		Page<CarAdvert> page = advertRepo.findPage(pageable);
+		Pageable newPageable = PageRequest.of(pageable.getPageNumber(), 8);
+		
+		Page<CarAdvert> page = advertRepo.findPage(newPageable);
 		model.addAttribute("page", page);
 		return "advert/advertListForm";
 	}
