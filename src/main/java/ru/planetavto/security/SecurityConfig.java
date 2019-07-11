@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-			.antMatchers("/advert/**", "/model/**", "/", "/parse").access("hasRole('ROLE_USER')")
+			.antMatchers("/advert/**", "/model/**", "/", "/parse", "/plan/**").access("hasRole('ROLE_USER')")
 			.antMatchers("/**").access("permitAll").and().formLogin().loginPage("/login").and().rememberMe()
 			.tokenValiditySeconds(2419200).key("advertKey").and().logout().logoutSuccessUrl("/")
 

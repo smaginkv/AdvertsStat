@@ -14,7 +14,7 @@ import ru.planetavto.advertsment.car.CarAdvert;
 @Service
 public class CarAdvertService {
 	private final CarAdvertRepository repository;
-	
+
 	@Autowired
 	public CarAdvertService(CarAdvertRepository repository) {
 		this.repository = repository;
@@ -22,30 +22,36 @@ public class CarAdvertService {
 
 	public List<CarAdvert> findAll() {
 		return repository.findAll();
-		//return (List<CarAdvert>) entityManager.createQuery("select s from CarAdvert s").getResultList();
-	}
-	
-	public Page<CarAdvert> findPage(Pageable pageable) {
-		return repository.findAll(pageable);
-		//return (List<CarAdvert>) entityManager.createQuery("select s from CarAdvert s").getResultList();
 	}
 
-	public CarAdvert save(CarAdvert advert, boolean update) {
+	public Page<CarAdvert> findPage(Pageable pageable) {
+		return repository.findAll(pageable);
+	}
+
+	public CarAdvert save(CarAdvert advert) {
 		repository.save(advert);
-//		if (update) {
-//			entityManager.merge(advert);
-//		} else {
-//			entityManager.persist(advert);
-//		}
+		return advert;
+	}
+
+	public CarAdvert findById(long advertId) {
+
+		CarAdvert advert = repository.findById(advertId);
+		if (advert == null) {
+			throw new EntityNotFoundException("Can't find advert for ID " + advertId);
+		}
+		return advert;
+	}
+
+	public CarAdvert findByRef(String advertRef) {
+
+		CarAdvert advert = repository.findByRef(advertRef);
+		if (advert == null) {
+			throw new EntityNotFoundException("Can't find advert by ref " + advertRef);
+		}
 		return advert;
 	}
 	
-	public CarAdvert findById(long advertId) {
-		
-		CarAdvert advert = repository.findById(advertId);
-        if (advert == null) {
-            throw new EntityNotFoundException("Can't find advert for ID " + advertId);
-        }
-        return advert;
+	public void deleteById(long id) {
+		repository.deleteById(id);
 	}
 }

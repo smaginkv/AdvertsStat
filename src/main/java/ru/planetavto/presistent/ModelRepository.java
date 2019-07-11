@@ -19,7 +19,7 @@ public class ModelRepository {
 	
 	@SuppressWarnings("unchecked")
 	public List<Model> findAll() {
-		return (List<Model>) manager.createQuery("select s from Model s").getResultList();
+		return (List<Model>) manager.createQuery("select s from Model s order by brand, title").getResultList();
 	}
 
 	public Model save(Model model, boolean update) {

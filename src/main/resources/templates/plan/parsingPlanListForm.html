@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Spring Boot Adverts</title>
+<link href="../../static/main.css" th:href="@{/main.css}"
+	rel="stylesheet" />
+</head>
+
+<body>
+	<div id="header" th:include="page :: header"></div>
+
+	<h1>Spring Boot Adverts</h1>
+
+	<form th:action="@{/plan/new}">
+		<button type="submit">Add new</button>
+	</form>
+	<br>
+	<ul th:each="plan : ${plans}">
+		<li><a href="" th:href="@{/plan/}+${plan.id}"> <span
+				th:text="${plan.toString()}">model</span>
+		</a></li>
+	</ul>
+	<br>
+	<br>
+
+	<div id="footer" th:include="page :: footer"></div>
+</body>
+</html>

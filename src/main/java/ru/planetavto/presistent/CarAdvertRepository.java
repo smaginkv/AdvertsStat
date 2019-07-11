@@ -10,4 +10,6 @@ public interface CarAdvertRepository extends PagingAndSortingRepository<CarAdver
 	public CarAdvert findById(long id);
 	
 	public List<CarAdvert> findAll();
+	
+	public CarAdvert findByRef(String ref);
 }

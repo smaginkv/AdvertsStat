@@ -14,12 +14,12 @@ public class Model {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	private String nomination;
+	private String title;
 	
 	private String brand;
 	
 	@Override
 	public String toString() {
-		return brand + " " + nomination;
+		return brand + " " + title;
 	}
 }

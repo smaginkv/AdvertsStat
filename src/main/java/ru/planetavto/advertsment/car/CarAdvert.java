@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import lombok.Data;
 import ru.planetavto.advertsment.Model;
 import ru.planetavto.advertsment.Price;
+import ru.planetavto.parsing.ParsingPlan;
 
 @Entity
 @Data
@@ -41,7 +42,11 @@ public class CarAdvert {
 	private List<Price> prices = new ArrayList<>();
 
 	@ManyToOne
-	private Model model;	
+	private Model model;
+	
+	@ManyToOne
+	private ParsingPlan plan;
+	
 	private String cityOfSale;
 	private boolean activity;	
 	private int horsepower;
@@ -49,5 +54,28 @@ public class CarAdvert {
 	private byte ownersNumber;
 	private boolean airConditioning;
 	private boolean esp;
-	private int mileage;	
+	private int mileage;
+	private String ref;
+	
+	public boolean lastPriceEquals(int price) {
+		if(prices.isEmpty()) {
+			return false;
+		}else if (prices.get(prices.size() - 1).getPrice() == price) {
+			return true;
+		}
+		return false;	
+	}
+
+	public CarAdvert() {
+		super();
+		activity = true;
+	}
+	
+	public int getLastPrice() {
+		if (prices.isEmpty()) {
+			return 0;
+		}else {
+			return prices.get(prices.size() - 1).getPrice();			
+		}		
+	}
 }

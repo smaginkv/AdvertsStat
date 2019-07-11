@@ -14,11 +14,12 @@
     <form th:action="@{/model/new}">
         <button type="submit">Add new</button>
     </form>
+    <br>
 
     <ul th:each="model : ${models}">
         <li><a href="" th:href="@{/model/}+${model.id}"> <span
                 th:text="${model.brand}">brand</span> <span
-                th:text="${model.nomination}">model</span>
+                th:text="${model.title}">model</span>
         </a></li>
     </ul>
 

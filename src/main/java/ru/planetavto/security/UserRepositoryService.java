@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import ru.planetavto.presistent.UserRepository;
 
 @Service
-public class UserRepositoryUserDetailsService 
+public class UserRepositoryService 
         implements UserDetailsService {
 
   private UserRepository userRepo;
 
   @Autowired
-  public UserRepositoryUserDetailsService(UserRepository userRepo) {
+  public UserRepositoryService(UserRepository userRepo) {
     this.userRepo = userRepo;
   }
   

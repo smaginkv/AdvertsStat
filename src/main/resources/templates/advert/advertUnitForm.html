@@ -12,13 +12,19 @@
 	<h2>Spring Boot Adverts</h2>
 
 	<form th:object="${advert}" method="post">
+		<label for="activity">activity:</label>
+		<input type="checkbox" th:field="*{activity}"></input>
+		<br />
 		<label for="model">model:</label> <select th:field="*{model.id}">
-			<option th:each="part : ${allModels}" th:value="${part.id}"
-				th:text="${part}"></option>
+			<option th:each="availableModel : ${allModels}" th:value="${availableModel.id}"
+				th:text="${availableModel}"></option>
 		</select>
 		<br />
 		<input type="hidden" name="id" th:field="*{id}"/>
-		<input type="hidden" name="image" th:field="*{image}"/> 
+		<input type="hidden" name="image" th:field="*{image}"/>
+		<input type="hidden" name="plan" th:field="*{plan}"/>
+		<input type="hidden" name="ref" th:field="*{ref}"/> 
+		
 		<label for="productionYear">production year:</label> 
 		<input type="text" th:field="*{productionYear}"></input>
 		<br /> 
@@ -27,7 +33,16 @@
 		<input type="text" th:field="*{engineCapacity}"></input>
 		<br/>
 		
-		<img th:src="*{'/img/' + id}" width="300"/> 
+		<label for="mileage">mileage:</label>
+		<input type="text" th:field="*{mileage}"></input>
+		<br/>		
+		
+		<label for="ref">reference:</label>
+		<a th:href="*{plan.getExtendRef(ref)}" th:text = "*{ref}" target="_blank">reference</a>
+		<br>
+		<br> 
+		
+		<img th:src="*{'/db_image/' + id}" width="536"/> 
 			
 			<br>
 		<div>
@@ -74,6 +89,9 @@
 
 		<br>
 		<button type="submit" name="saveAdvert">Save and close</button>
+		<br>
+		<br>
+		<button type="submit" name="deleteAdvert">delete</button>
 		<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 	</form>
 

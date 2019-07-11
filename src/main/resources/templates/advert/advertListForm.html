@@ -16,31 +16,35 @@
         <button type="submit">Add new</button>
     </form>
 
+
+	<h3 th:text="${page.number+1} + ' of ' + ${page.totalPages}"></h3>
+	
+	<span th:if="${page.hasPrevious() == true}"><a th:href="@{/advert/(page=${page.number-1})}">Previous  </a></span>
+	<span th:if="${page.hasNext() == true}"><a th:href="@{/advert/(page=${page.number+1})}">Next</a></span>
+
 	<div class="flex-container">
-	    <ul th:each="advert : ${adverts}">
+	    <ul th:each="advert : ${page.content}">
 			<li>					
 				<div class="flex-element">
 					<a href="" th:href="@{/advert/}+${advert.id}">
-						<img src="" th:src= "${advert.getImage() == null} ? '/images/auto-default.png': *{'/img/' + advert.id}" class="img-responsive center-block" width=300 height=230>	
+						<img src="" th:src= "${advert.getImage() == null} ? '/images/auto-default.png': *{'/db_image/' + advert.id}" class="img-responsive center-block" width=300 height=230>	
 					</a>
 					<div class="text-left">
 						<div>
 							<a href="" th:href="@{/advert/}+${advert.id}" class="auto-name">
 								<span th:text= "${advert.model} +' '+ ${advert.productionYear}" class="auto-name">Brand Model Prodaction year</span>
 							</a>
-							<span class="auto-short-description" th:text= ${advert.engineCapacity}>face discription</span>
+							<span class="auto-short-description" th:text= "${advert.engineCapacity}+'l. '+${T(java.text.NumberFormat).getInstance().format(advert.mileage)}+'km. '">face discription</span>
 						</div>
 						<span class="auto-short-price-n" style="margin:-19px 0 -12px;">
-							<span class="price">649 000</span>p
+							<span class="price" th:text= "${T(java.text.NumberFormat).getInstance().format(advert.getLastPrice())}">0</span>p
 						</span>
 					</div>
 				</div>
 			
 			</li>
 		</ul>
-	</div>
-	
-		
+	</div>	
 
 	
 	<div id="footer" th:include="page :: footer"></div>

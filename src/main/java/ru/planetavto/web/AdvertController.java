@@ -1,6 +1,5 @@
 package ru.planetavto.web;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -8,16 +7,18 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import ru.planetavto.advertsment.Model;
 import ru.planetavto.advertsment.Price;
 import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.presistent.CarAdvertService;
@@ -32,9 +33,9 @@ public class AdvertController {
 	private ModelRepository modelRepo;
 	
 	@RequestMapping(value = "/advert", method=RequestMethod.GET)
-	public String goToAdvertListForm(Map<String,Object> model) {
-		List<CarAdvert> adverts = advertRepo.findAll();
-		model.put("adverts", adverts);
+	public String getAdvertListForm(Model model, Pageable pageable) {
+		Page<CarAdvert> page = advertRepo.findPage(pageable);
+		model.addAttribute("page", page);
 		return "advert/advertListForm";
 	}
 
@@ -46,7 +47,7 @@ public class AdvertController {
 	
 	@RequestMapping(value ="/advert/new",  method=RequestMethod.POST)
 	public String saveNewAdvert(CarAdvert advert) {
-		advertRepo.save(advert, false);
+		advertRepo.save(advert);
 		return "redirect:/advert";
 	}
 	
@@ -63,11 +64,11 @@ public class AdvertController {
 		
 	}
 	
-	@RequestMapping(value = "/img/{advertId}", method=RequestMethod.GET) 
+	@RequestMapping(value = "/db_image/{advertId}", method=RequestMethod.GET) 
 	public ResponseEntity<byte[]> getImage(@PathVariable("advertId") long advertId) {
         
 		CarAdvert advert = advertRepo.findById(advertId);
-		HttpStatus status = advert != null ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+		HttpStatus status = advert == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
 		
 		return new ResponseEntity<byte[]>(advert.getImage(), status);	
 	} 
@@ -75,18 +76,24 @@ public class AdvertController {
 	@RequestMapping(value = "/advert/{advertId}", params={"saveAdvert"}, method=RequestMethod.POST)
 	public String updateTargetAdvert(@PathVariable long advertId, CarAdvert advert) {
 		advert.setId(advertId);
-		advertRepo.save(advert, true);
+		advertRepo.save(advert);
 		return "redirect:/advert";
-	}	
+	}
+	
+	@RequestMapping(value = "/advert/{advertId}", params={"deleteAdvert"}, method=RequestMethod.POST)
+	public String deleteTargetAdvert(@PathVariable long advertId) {
+		advertRepo.deleteById(advertId);
+		return "redirect:/advert";
+	}
 	
 	@ModelAttribute("allModels")
-	public List<Model> populateModels() {
+	public List<ru.planetavto.advertsment.Model> populateModels() {
 	    return modelRepo.findAll();
 	}
 	
 	@RequestMapping(value="/advert/{advertId}", params={"addPrice"}, method=RequestMethod.POST)
 	public String addPrice(CarAdvert advert, Map<String,Object> model) {
-		advert.getPrices().add(new Price());
+		advert.getPrices().add(new Price(0));
 		model.put("advert", advert);
 	    return "advert/advertUnitForm";
 	}

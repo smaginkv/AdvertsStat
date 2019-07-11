@@ -13,8 +13,12 @@ import lombok.Data;
 @Data
 public class Price {
 	
+	public Price(int price) {
+		this.date = LocalDate.now();
+		this.price = price;
+	}
 	public Price() {
-		date = LocalDate.now();
+		this.date = LocalDate.now();
 	}
 
 	@NumberFormat(pattern = "###,000")

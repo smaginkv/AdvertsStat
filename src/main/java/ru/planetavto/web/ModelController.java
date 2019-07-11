@@ -24,14 +24,14 @@ public class ModelController {
 	}
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public String goToAdvertListForm(Map<String,Object> model) {
+	public String getModelListForm(Map<String,Object> model) {
 		List<Model> models = modelRepo.findAll();
 		model.put("models", models);
 		return "model/modelListForm";
 	}
 
 	@RequestMapping(value ="/new",  method=RequestMethod.GET)
-	public String newAdvert(Map<String,Object> model) {	
+	public String newModel(Map<String,Object> model) {	
 		model.put("model", new Model());
 		return "model/modelUnitForm";
 	}
@@ -43,7 +43,7 @@ public class ModelController {
 	}
 	
 	@RequestMapping(value = "/{modelId}", method=RequestMethod.GET)
-	public String modelListForm(@PathVariable String modelId, Map<String,Object> model) {
+	public String getModelUnitForm(@PathVariable String modelId, Map<String,Object> model) {
 		Model carModel = modelRepo.findById(Long.parseLong(modelId));
 		model.put("model", carModel);
 		return "model/modelUnitForm";
