@@ -37,7 +37,7 @@ public class CarAdvert {
 	@Column(name="image")
 	private byte[] image;
 
-	@ElementCollection(fetch = FetchType.LAZY)
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "advert_prices", joinColumns = @JoinColumn(name = "advert_id", nullable = false))
 	private List<Price> prices = new ArrayList<>();
 

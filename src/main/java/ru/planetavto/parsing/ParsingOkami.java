@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -63,7 +64,10 @@ public class ParsingOkami {
 				srcList = parseAdvertList(doc, plan);
 				advertList.addAll(srcList);
 				
-			} while ( !srcList.isEmpty());				
+			} while ( !srcList.isEmpty());
+			
+			plan.setLastInvoke(LocalDateTime.now());
+			planRepo.save(plan);
 		}		
 		return advertList;
 	}

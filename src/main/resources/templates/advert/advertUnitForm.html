@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Spring Boot Adverts</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <link href="../../static/main.css" th:href="@{/main.css}"
 	rel="stylesheet" />
 </head>
@@ -11,7 +12,7 @@
 
 	<h2>Spring Boot Adverts</h2>
 
-	<form th:object="${advert}" method="post">
+	<form th:object="${advert}" method="post" id="advert-form">
 		<label for="activity">activity:</label>
 		<input type="checkbox" th:field="*{activity}"></input>
 		<br />
@@ -46,9 +47,9 @@
 			
 			<br>
 		<div>
-			<table rules="groups">
+			<table>
 				<caption>
-					<b>Prices
+					<b>Prices</b>
 				</caption>
 				<thead>
 					<tr>
@@ -91,10 +92,24 @@
 		<button type="submit" name="saveAdvert">Save and close</button>
 		<br>
 		<br>
-		<button type="submit" name="deleteAdvert">delete</button>
+		<button type="submit" name="deleteAdvert" id="deleteAdvert">delete</button>
+				
 		<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+		
 	</form>
 
 	<div id="footer" th:include="page :: footer"></div>
 </body>
+<script>
+	$(document).ready(function() {
+
+		$('#deleteAdvert').click(function(event) {
+			var currentForm = $(this).closest('#advert-form');
+			if (confirm('Are you sure to remove the advert?') == false) {
+				event.preventDefault();
+			}
+			return true;
+		});
+	});
+</script>
 </html>

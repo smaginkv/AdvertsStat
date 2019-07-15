@@ -14,9 +14,10 @@ import lombok.Data;
 public class Price {
 	
 	public Price(int price) {
-		this.date = LocalDate.now();
+		this();
 		this.price = price;
 	}
+	
 	public Price() {
 		this.date = LocalDate.now();
 	}

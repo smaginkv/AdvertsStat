@@ -1,11 +1,15 @@
 package ru.planetavto.parsing;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 import ru.planetavto.advertsment.Model;
@@ -25,6 +29,9 @@ public class ParsingPlan {
 	private boolean active;
 	
 	private String pathToAdvert;
+	
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+	private LocalDateTime lastInvoke;
 	
 	@Override
 	public String toString() {
