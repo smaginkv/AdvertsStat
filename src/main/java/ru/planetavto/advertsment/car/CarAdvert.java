@@ -1,6 +1,7 @@
 package ru.planetavto.advertsment.car;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 import ru.planetavto.advertsment.Model;
 import ru.planetavto.advertsment.Price;
@@ -29,7 +32,7 @@ public class CarAdvert implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	private long id;
 	
 	@Column(columnDefinition="Decimal(2,1)")
 	private float engineCapacity;
@@ -59,6 +62,12 @@ public class CarAdvert implements Serializable {
 	private boolean esp;
 	private int mileage;
 	private String ref;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate changeActivityDate;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate createDate;
 	
 	public boolean lastPriceEquals(int price) {
 		if(prices.isEmpty()) {

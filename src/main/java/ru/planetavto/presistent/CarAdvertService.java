@@ -1,5 +1,6 @@
 package ru.planetavto.presistent;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import ru.planetavto.advertsment.car.CarAdvert;
+import ru.planetavto.parsing.ParsingPlan;
 
 @Service
 public class CarAdvertService {
@@ -53,5 +55,29 @@ public class CarAdvertService {
 	
 	public void deleteById(long id) {
 		repository.deleteById(id);
+	}
+	
+	public long[] setInactiveForAllExceptAdvertList(List<CarAdvert> adverts, ParsingPlan plan) {
+		
+		List<CarAdvert> advertsToInactive = getByActivityAndIdNotIn(adverts, plan);
+		
+		long[] inactiveId = new long[advertsToInactive.size()];
+		for(CarAdvert advert: advertsToInactive) {
+			advert.setActivity(false);
+			advert.setChangeActivityDate(LocalDate.now());
+			repository.save(advert);
+			//AOP
+			
+			inactiveId[advertsToInactive.indexOf(advert)] = advert.getId();
+		}
+		return inactiveId;		
+	}
+	
+	private List<CarAdvert> getByActivityAndIdNotIn(List<CarAdvert> adverts, ParsingPlan plan){
+		long [] idArray = new long[Math.max(adverts.size(), 1)];
+		for(CarAdvert advert: adverts) {
+			idArray[adverts.indexOf(advert)] = advert.getId();
+		}
+		return repository.findByIdNotInAndActivityAndPlan(idArray, true, plan);
 	}
 }

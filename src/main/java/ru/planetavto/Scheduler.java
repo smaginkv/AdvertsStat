@@ -14,7 +14,7 @@ public class Scheduler {
 	
     @Scheduled(cron = "0 0 9,21 * *  ?")
     public void clearTempFolder() {
-    	parser.checkAdvertList();
+    	parser.parseAdvertsByAllPlans();
     	
     }
 }

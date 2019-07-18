@@ -2,7 +2,6 @@ package ru.planetavto.web;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.parsing.ParsingOkami;
 
 @Controller
@@ -27,7 +25,7 @@ public class ParsingController {
 
 	@PostMapping
 	public String parse() throws IOException, SQLException {
-		parser.checkAdvertList();		
+		parser.parseAdvertsByAllPlans();		
 		return "parsing";
 		
 	}

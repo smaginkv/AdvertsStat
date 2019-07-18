@@ -24,7 +24,17 @@
 		<input type="hidden" name="id" th:field="*{id}"/>
 		<input type="hidden" name="image" th:field="*{image}"/>
 		<input type="hidden" name="plan" th:field="*{plan}"/>
-		<input type="hidden" name="ref" th:field="*{ref}"/> 
+		<input type="hidden" name="ref" th:field="*{ref}"/>
+				 
+		
+		<label for="createDate" >create date:</label> 
+		<input type="date" th:field="*{createDate}"></input>
+		<br />
+		
+		<label th:if="${advert.changeActivityDate != null}" for="changeActivityDate">activity changed:</label> 
+		<input type="date" th:field="*{changeActivityDate}" th:if="${advert.changeActivityDate != null}"></input>
+		<br th:if="${advert.changeActivityDate != null}">
+		<!-- <input type="hidden" name="changeActivityDate" th:field="*{changeActivityDate}"/> -->		
 		
 		<label for="productionYear">production year:</label> 
 		<input type="text" th:field="*{productionYear}"></input>

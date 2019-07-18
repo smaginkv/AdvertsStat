@@ -47,34 +47,42 @@ public class ParsingOkami {
 	private String pathToImage = "https://photos.okami-market.ru/images/auto/large/";
 	private String primaryImage = "-exterior-front.jpg";
 
-	public List<CarAdvert> checkAdvertList() {		
-		Document doc;
-		List<CarAdvert> srcList = new ArrayList<CarAdvert>();
-		List<CarAdvert> advertList = new ArrayList<CarAdvert>();
-		
-		List<ParsingPlan> plans = planRepo.findAllActive();		
-		for (ParsingPlan plan: plans) {
-			int index = 1;
-			do {
-				try {
-					doc = Jsoup.connect(plan.getUrl()+index++).get();
+	public void parseAdvertsByAllPlans() {
 
-				} catch (IOException e) {
-					// write exception to log
-					continue;
-				}
-				srcList = parseAdvertList(doc, plan);
-				advertList.addAll(srcList);
-				
-			} while ( !srcList.isEmpty());
+		List<ParsingPlan> plans = planRepo.findAllActive();
+		for (ParsingPlan plan : plans) {
 			
+			parseAdvertByPlan(plan);
 			plan.setLastInvoke(LocalDateTime.now());
 			planRepo.save(plan);
 		}		
-		return advertList;
 	}
 	
-	private List<CarAdvert> parseAdvertList(Document doc, ParsingPlan plan) {
+	private List<CarAdvert> parseAdvertByPlan(ParsingPlan plan) {
+		Document doc;
+		List<CarAdvert> planList = new ArrayList<>(), sreenList = new ArrayList<>();
+		int index = 1;
+		do {
+			
+			try {
+				doc = Jsoup.connect(plan.getUrl()+index++).get();
+
+			} catch (IOException e) {
+				// write exception to log
+				continue;
+			}
+			sreenList = getAdvertScreenList(doc, plan);
+			planList.addAll(sreenList);
+			
+		} while ( !sreenList.isEmpty());
+		
+		long[] ids = advertRepo.setInactiveForAllExceptAdvertList(planList, plan);
+		SendMessageBecomeInactive(ids);
+		
+		return planList;
+		
+	}
+	private List<CarAdvert> getAdvertScreenList(Document doc, ParsingPlan plan) {
 		List<CarAdvert> advertList = new ArrayList<CarAdvert>();
 		
 		Elements carsDiv = doc.body().getElementsByClass(advertSeparator);
@@ -214,6 +222,13 @@ public class ParsingOkami {
 			
 			List<Price> prices = advert.getPrices();
 			prices.add(new Price(newPrice));
+		}
+	}
+	
+	private void SendMessageBecomeInactive(long []ids) {
+		for(long id: ids) {
+			String message = String.format("Advert become inactive! ID: '%d'", id);
+			messaging.sendAdvert(message);
 		}	
 	}
 }
