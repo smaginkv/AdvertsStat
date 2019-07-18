@@ -12,14 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.parsing.ParsingOkami;
-import ru.planetavto.presistent.CarAdvertService;
 
 @Controller
 @RequestMapping("/parse")
 public class ParsingController {
-
-	@Autowired
-	private CarAdvertService advertRepo;
 	
 	@Autowired
 	private ParsingOkami parser;
@@ -31,11 +27,8 @@ public class ParsingController {
 
 	@PostMapping
 	public String parse() throws IOException, SQLException {
-		
-		List<CarAdvert> advertList = parser.getAdvertList();
-		for (CarAdvert advert : advertList) {
-			advertRepo.save(advert);
-		}		
+		parser.checkAdvertList();		
 		return "parsing";
+		
 	}
 }

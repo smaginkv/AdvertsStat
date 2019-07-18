@@ -23,21 +23,23 @@ import org.springframework.stereotype.Component;
 
 import ru.planetavto.advertsment.Price;
 import ru.planetavto.advertsment.car.CarAdvert;
+import ru.planetavto.messaging.JmsAdvertMessagingService;
 import ru.planetavto.presistent.CarAdvertService;
-import ru.planetavto.presistent.ModelRepository;
 import ru.planetavto.presistent.ParsingPlanService;
 
 @Component
 public class ParsingOkami {
 
-	@Autowired
-	private ModelRepository modelRepo;
-
-	@Autowired
 	private CarAdvertService advertRepo;
+	private ParsingPlanService planRepo;
+	private JmsAdvertMessagingService messaging;
 	
 	@Autowired
-	private ParsingPlanService planRepo;
+	public ParsingOkami(CarAdvertService advertRepo, ParsingPlanService planRepo, JmsAdvertMessagingService messaging) {
+		this.advertRepo = advertRepo;
+		this.planRepo = planRepo;
+		this.messaging = messaging;
+	}
 
 	private CarAdvert advert;
 
@@ -45,7 +47,7 @@ public class ParsingOkami {
 	private String pathToImage = "https://photos.okami-market.ru/images/auto/large/";
 	private String primaryImage = "-exterior-front.jpg";
 
-	public List<CarAdvert> getAdvertList() {		
+	public List<CarAdvert> checkAdvertList() {		
 		Document doc;
 		List<CarAdvert> srcList = new ArrayList<CarAdvert>();
 		List<CarAdvert> advertList = new ArrayList<CarAdvert>();
@@ -84,10 +86,11 @@ public class ParsingOkami {
 				setEngineCapacity(carDiv);
 				setProductionYear(carDiv);
 				setMilage(carDiv);
-				setPrice(carDiv);
-				
-				advert.setModel(modelRepo.findById(1l));
+				setPrice(carDiv);				
+				advert.setModel(plan.getModel());
 				advert.setPlan(plan);
+				
+				advertRepo.save(advert);
 				
 				advertList.add(advert);
 			} catch (ParseException e) {
@@ -125,6 +128,9 @@ public class ParsingOkami {
 		} catch (EntityNotFoundException e) {
 			advert = new CarAdvert();
 			advert.setRef(ref);
+			//change invoke to AOP when generate id
+			//need to intermediate structure that have all information about new advert
+			messaging.sendAdvert("new advert");
 		}
 		return advert;
 	}
@@ -197,11 +203,17 @@ public class ParsingOkami {
 		
 		Pattern pattern = Pattern.compile("\\s");
 		Matcher matcher = pattern.matcher(draftPrice);		
-		int cost = Integer.parseInt(matcher.replaceAll(""));
+		int newPrice = Integer.parseInt(matcher.replaceAll(""));
 		
-		if (!advert.lastPriceEquals(cost)) {
+		if (!advert.lastPriceEquals(newPrice)) {
+			
+			//use AOP to check changes
+			String message = String.format("There is update price! ID: '%d' from %d to %d", advert.getId(),
+					advert.getLastPrice(), newPrice);
+			messaging.sendAdvert(message);
+			
 			List<Price> prices = advert.getPrices();
-			prices.add(new Price(cost));
-		}		
+			prices.add(new Price(newPrice));
+		}	
 	}
 }

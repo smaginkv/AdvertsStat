@@ -1,5 +1,6 @@
 package ru.planetavto.advertsment.car;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,9 @@ import ru.planetavto.parsing.ParsingPlan;
 
 @Entity
 @Data
-public class CarAdvert {
+public class CarAdvert implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
