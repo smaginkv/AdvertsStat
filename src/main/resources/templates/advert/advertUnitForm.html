@@ -2,113 +2,122 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Spring Boot Adverts</title>
+
+<link rel="stylesheet" href="../../static/main.css" th:href="@{/main.css}" />
+<link rel="stylesheet" href="../../static/my-slider.css" th:href="@{/my-slider.css}"/>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<link href="../../static/main.css" th:href="@{/main.css}"
-	rel="stylesheet" />
+<script src="../../static/ism-2.2.min.js" th:src="@{/ism-2.2.min.js}"></script>
 </head>
 
 <body>
-	<div id="header" th:include="page :: header"></div>
+    <div id="header" th:include="page :: header"></div>
 
-	<h2>Spring Boot Adverts</h2>
+    <h2>Spring Boot Adverts</h2>
 
-	<form th:object="${advert}" method="post" id="advert-form">
-		<label for="activity">activity:</label>
-		<input type="checkbox" th:field="*{activity}"></input>
-		<br />
-		<label for="model">model:</label> <select th:field="*{model.id}">
-			<option th:each="availableModel : ${allModels}" th:value="${availableModel.id}"
-				th:text="${availableModel}"></option>
-		</select>
-		<br />
-		<input type="hidden" name="id" th:field="*{id}"/>
-		<input type="hidden" name="image" th:field="*{image}"/>
-		<input type="hidden" name="plan" th:field="*{plan}"/>
-		<input type="hidden" name="ref" th:field="*{ref}"/>
-				 
-		
-		<label for="createDate" >create date:</label> 
-		<input type="date" th:field="*{createDate}"></input>
-		<br />
-		
-		<label th:if="${advert.changeActivityDate != null}" for="changeActivityDate">activity changed:</label> 
-		<input type="date" th:field="*{changeActivityDate}" th:if="${advert.changeActivityDate != null}"></input>
-		<br th:if="${advert.changeActivityDate != null}">
-		<!-- <input type="hidden" name="changeActivityDate" th:field="*{changeActivityDate}"/> -->		
-		
-		<label for="productionYear">production year:</label> 
-		<input type="text" th:field="*{productionYear}"></input>
-		<br /> 
-		
-		<label for="engineCapacity">engine capacity:</label>
-		<input type="text" th:field="*{engineCapacity}"></input>
-		<br/>
-		
-		<label for="mileage">mileage:</label>
-		<input type="text" th:field="*{mileage}"></input>
-		<br/>		
-		
-		<label for="ref">reference:</label>
-		<a th:href="*{plan.getExtendRef(ref)}" th:text = "*{ref}" target="_blank">reference</a>
-		<br>
-		<br> 
-		
-		<img th:src="*{'/db_image/' + id}" width="536"/> 
-			
-			<br>
-		<div>
-			<table>
-				<caption>
-					<b>Prices</b>
-				</caption>
-				<thead>
-					<tr>
-						<td></td>
-						<td>
-							<button type="submit" name="addPrice">
-								<img src="..\..\static\images\insert.png" alt="insert"
-									th:src="@{/images/insert.png}" style="vertical-align: middle" />
-							</button>
-						</td>
-						<td></td>
-						<td></td>
-					</tr>
-					<tr>
-						<th>N</th>
-						<th>Date</th>
-						<th>Price</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="price,priceStat : *{prices}">
-						<td th:text="${priceStat.count}">1</td>
-						<td><input type="date"
-							th:field="*{prices[__${priceStat.index}__].date}" /></td>
-						<td><input type="text"
-							th:field="*{prices[__${priceStat.index}__].price}" /></td>
-						<td><button type="submit" name="removePrice"
-								th:value="${priceStat.index}">
-								<img src="..\..\static\images\remove.png"
-									th:src="@{/images/remove.png}" alt="insert"
-									style="vertical-align: middle" />
-							</button></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+    <form th:object="${advert}" method="post" id="advert-form">
+        <label for="activity">activity:</label> <input type="checkbox"
+            th:field="*{activity}"></input> <br /> <label for="model">model:</label>
+        <select th:field="*{model.id}">
+            <option th:each="availableModel : ${allModels}"
+                th:value="${availableModel.id}"
+                th:text="${availableModel}"></option>
+        </select> <br /> <input type="hidden" name="id" th:field="*{id}" /> <input
+            type="hidden" name="image" th:field="*{image}" /> <input
+            type="hidden" name="plan" th:field="*{plan}" /> <input
+            type="hidden" name="ref" th:field="*{ref}" /> <label
+            for="createDate">create date:</label> <input type="date"
+            th:field="*{createDate}"></input> <br /> <label
+            th:if="${advert.changeActivityDate != null}"
+            for="changeActivityDate">activity changed:</label> <input
+            type="date" th:field="*{changeActivityDate}"
+            th:if="${advert.changeActivityDate != null}"></input> <br
+            th:if="${advert.changeActivityDate != null}">
 
-		<br>
-		<button type="submit" name="saveAdvert">Save and close</button>
-		<br>
-		<br>
-		<button type="submit" name="deleteAdvert" id="deleteAdvert">delete</button>
-				
-		<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-		
-	</form>
+        <label for="productionYear">production year:</label> <input
+            type="text" th:field="*{productionYear}"></input> <br /> <label
+            for="engineCapacity">engine capacity:</label> <input
+            type="text" th:field="*{engineCapacity}"></input> <br /> <label
+            for="mileage">mileage:</label> <input type="text"
+            th:field="*{mileage}"></input> <br /> <label for="ref">reference:</label>
+         <a th:href="*{plan.getExtendRef(ref)}" th:text="*{ref}"
+            target="_blank">reference</a> <br> <br> 
+            
+         <div class='container'>
+            <div class="ism-slider" data-play_type="loop" id="my-slider">
+                <ol>
+                    <li><img th:src="*{'/db_image/' + id}" />
+                        <div class="ism-caption ism-caption-0">My
+                            slide caption text</div></li>
+                    <li><img th:src="*{'/db_image/' + id}" />
+                        <div class="ism-caption ism-caption-0">My
+                            slide caption text</div></li>
+                    <li><img th:src="*{'/db_image/' + id}" />
+                        <div class="ism-caption ism-caption-0">My
+                            slide caption text</div></li>
+                </ol>
+            </div>
+        </div> 
+         
+        <br>
+        <div>
+            <table>
+                <caption>
+                    <b>Prices</b>
+                </caption>
+                <thead>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <button type="submit" name="addPrice">
+                                <img
+                                    src="..\..\static\images\insert.png"
+                                    alt="insert"
+                                    th:src="@{/images/insert.png}"
+                                    style="vertical-align: middle" />
+                            </button>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th>N</th>
+                        <th>Date</th>
+                        <th>Price</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="price,priceStat : *{prices}">
+                        <td th:text="${priceStat.count}">1</td>
+                        <td><input type="date"
+                            th:field="*{prices[__${priceStat.index}__].date}" /></td>
+                        <td><input type="text"
+                            th:field="*{prices[__${priceStat.index}__].price}" /></td>
+                        <td><button type="submit"
+                                name="removePrice"
+                                th:value="${priceStat.index}">
+                                <img
+                                    src="..\..\static\images\remove.png"
+                                    th:src="@{/images/remove.png}"
+                                    alt="insert"
+                                    style="vertical-align: middle" />
+                            </button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-	<div id="footer" th:include="page :: footer"></div>
+        <br>
+        <button type="submit" name="saveAdvert">Save and close</button>
+        <br> <br>
+        <button type="submit" name="deleteAdvert" id="deleteAdvert">delete</button>
+
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+    </form>
+
+    <div id="footer" th:include="page :: footer"></div>
 </body>
 <script>
 	$(document).ready(function() {

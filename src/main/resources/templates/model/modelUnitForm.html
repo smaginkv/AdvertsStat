@@ -14,7 +14,7 @@
 	<form th:object="${model}" method="post">
       <label for="brand">brand:</label>
       <input type="text" th:field="*{brand}"></input><br/>
-      <label for="title">Model:</label>
+      <label for="title">model:</label>
       <input type="text" th:field="*{title}"></input><br/>
       <input type="submit" value = "Save and close"></input>
       <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
