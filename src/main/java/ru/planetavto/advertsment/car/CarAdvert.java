@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import ru.planetavto.advertsment.AdvertImage;
 import ru.planetavto.advertsment.Model;
 import ru.planetavto.advertsment.Price;
 import ru.planetavto.parsing.ParsingPlan;
@@ -46,6 +47,10 @@ public class CarAdvert implements Serializable {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "advert_prices", joinColumns = @JoinColumn(name = "advert_id", nullable = false))
 	private List<Price> prices = new ArrayList<>();
+	
+	@ElementCollection(fetch = FetchType.LAZY)
+	@CollectionTable(joinColumns = @JoinColumn(name = "advert_id", nullable = false))
+	private List<AdvertImage> images = new ArrayList<>();
 
 	@ManyToOne
 	private Model model;
@@ -81,6 +86,7 @@ public class CarAdvert implements Serializable {
 	public CarAdvert() {
 		super();
 		activity = true;
+		createDate = LocalDate.now();
 	}
 	
 	public int getLastPrice() {

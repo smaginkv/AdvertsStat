@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ru.planetavto.advertsment.Price;
 import ru.planetavto.advertsment.car.CarAdvert;
+import ru.planetavto.parsing.ParsingOkami;
 import ru.planetavto.presistent.CarAdvertService;
 import ru.planetavto.presistent.ModelRepository;
 
@@ -30,11 +31,13 @@ public class AdvertController {
 
 	private CarAdvertService advertRepo;
 	private ModelRepository modelRepo;
+	private ParsingOkami parser;
 	
 	@Autowired
-	public AdvertController(CarAdvertService advertRepo, ModelRepository modelRepo) {
+	public AdvertController(CarAdvertService advertRepo, ModelRepository modelRepo, ParsingOkami parser) {
 		this.advertRepo = advertRepo;
 		this.modelRepo  = modelRepo;
+		this.parser = parser;
 	}
 	
 	@RequestMapping(value = "/advert", method=RequestMethod.GET)
@@ -67,7 +70,7 @@ public class AdvertController {
 		} catch (EntityNotFoundException e) {
 			redirectAttributes.addFlashAttribute("flash.message", e.getMessage());
 			return "redirect:/advert";
-		}				
+		}			
 		
 	}
 	
@@ -80,6 +83,16 @@ public class AdvertController {
 		return new ResponseEntity<byte[]>(advert.getImage(), status);	
 	} 
 	
+	@RequestMapping(value = "/advert_images/{advertId}/{imageId}", method=RequestMethod.GET) 
+	public ResponseEntity<byte[]> getImages(@PathVariable("advertId") long advertId,
+			@PathVariable("imageId") int imageId) {
+
+		CarAdvert advert = advertRepo.findById(advertId);
+		HttpStatus status = advert == null ? HttpStatus.NOT_FOUND : HttpStatus.OK;
+		
+		return new ResponseEntity<byte[]>(advert.getImages().get(imageId).getImage(), status);
+	}
+	
 	@RequestMapping(value = "/advert/{advertId}", params={"saveAdvert"}, method=RequestMethod.POST)
 	public String updateTargetAdvert(@PathVariable long advertId, CarAdvert advert) {
 		advert.setId(advertId);
@@ -90,6 +103,12 @@ public class AdvertController {
 	@RequestMapping(value = "/advert/{advertId}", params={"deleteAdvert"}, method=RequestMethod.POST)
 	public String deleteTargetAdvert(@PathVariable long advertId) {
 		advertRepo.deleteById(advertId);
+		return "redirect:/advert";
+	}
+	
+	@RequestMapping(value = "/advert/{advertId}", params={"updateImages"}, method=RequestMethod.POST)
+	public String updateAdvertUmages(@PathVariable long advertId) {
+		parser.parseImagesByAdvert(advertId);		
 		return "redirect:/advert";
 	}
 	

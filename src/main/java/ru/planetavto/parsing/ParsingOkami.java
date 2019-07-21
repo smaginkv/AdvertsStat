@@ -21,6 +21,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import ru.planetavto.advertsment.AdvertImage;
 import ru.planetavto.advertsment.Price;
 import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.messaging.JmsAdvertMessagingService;
@@ -46,6 +47,7 @@ public class ParsingOkami {
 	private String advertSeparator = "col-lg-3 col-md-4 col-sm-6";
 	private String pathToImage = "https://photos.okami-market.ru/images/auto/large/";
 	private String primaryImage = "-exterior-front.jpg";
+	private String imageSeparator = "fancybox";
 
 	public void parseAdvertsByAllPlans() {
 
@@ -56,6 +58,37 @@ public class ParsingOkami {
 			plan.setLastInvoke(LocalDateTime.now());
 			planRepo.save(plan);
 		}		
+	}
+	
+	public void parseImagesByAdvert(long advertId) {
+		Document doc;
+		advert = advertRepo.findById(advertId);
+
+		try {
+			doc = Jsoup.connect(advert.getPlan().getPathToAdvert() + advert.getRef()).get();
+
+		} catch (IOException e) {
+			// write exception to log
+			return;
+		}
+		
+		Elements imageItems = doc.body().getElementsByClass(imageSeparator);
+		List<AdvertImage> images = new ArrayList<>();
+		for (Element imageItem : imageItems) {
+
+			try {				
+				String pathToImage = imageItem.attr("href");
+				
+				AdvertImage image = new AdvertImage();
+				image.setTitle("0");
+				image.setImage(getImage(pathToImage));
+				images.add(image);
+			} catch (ParseException e) {
+				// write exception to log
+			}
+		}
+		advert.setImages(images);
+		advertRepo.save(advert);
 	}
 	
 	private List<CarAdvert> parseAdvertByPlan(ParsingPlan plan) {
@@ -90,7 +123,7 @@ public class ParsingOkami {
 			try {
 				advert = getAdvert(carDiv);
 				
-				setImage();
+				setAdvertImage();
 				setEngineCapacity(carDiv);
 				setProductionYear(carDiv);
 				setMilage(carDiv);
@@ -143,23 +176,32 @@ public class ParsingOkami {
 		return advert;
 	}
 
-	private void setImage() {
-		String rref = advert.getRef();
+	private void setAdvertImage() {
+		String url = pathToImage + advert.getRef() + primaryImage;
+		try {
+			advert.setImage(getImage(url));
+		} catch (ParseException e) {
+			// write exception to log
+		}
+	}
+	
+	private byte[] getImage(String strUrl) throws ParseException {
+		ByteArrayOutputStream jpgContent = new ByteArrayOutputStream();
 		try {
 
-			URL url = new URL(pathToImage + rref + primaryImage);
+			URL url = new URL(strUrl);
 			BufferedImage inputImage = ImageIO.read(url.openStream());
-			ByteArrayOutputStream jpgContent = new ByteArrayOutputStream();
-
 			ImageIO.write(inputImage, "jpg", jpgContent);
-			advert.setImage(jpgContent.toByteArray());
 
 		} catch (IOException e) {
-			// write exception to log
+			throw new ParseException(e.getMessage(), 0);
 			
 		}catch(IllegalArgumentException e) {
 			//no image, use default
+			throw new ParseException(e.getMessage(), 0);
 		}
+		
+		return jpgContent.toByteArray();		
 	}
 
 	private void setEngineCapacity(Element carDiv) {

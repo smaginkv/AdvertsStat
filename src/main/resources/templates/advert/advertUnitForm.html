@@ -41,23 +41,22 @@
             for="mileage">mileage:</label> <input type="text"
             th:field="*{mileage}"></input> <br /> <label for="ref">reference:</label>
          <a th:href="*{plan.getExtendRef(ref)}" th:text="*{ref}"
-            target="_blank">reference</a> <br> <br> 
-            
+            target="_blank">reference</a> <br> <br>              
+                
          <div class='container'>
             <div class="ism-slider" data-play_type="loop" id="my-slider">
                 <ol>
-                    <li><img th:src="*{'/db_image/' + id}" />
-                        <div class="ism-caption ism-caption-0">My
-                            slide caption text</div></li>
-                    <li><img th:src="*{'/db_image/' + id}" />
-                        <div class="ism-caption ism-caption-0">My
-                            slide caption text</div></li>
-                    <li><img th:src="*{'/db_image/' + id}" />
-                        <div class="ism-caption ism-caption-0">My
-                            slide caption text</div></li>
+                    <li th:each="imageItem,iterImage : *{images}">
+                        <img th:src="*{'/advert_images/'} +${advert.id}+'/'+${iterImage.count-1}" width=900/>
+                        <div class="ism-caption ism-caption-0">My slide caption text</div>
+                    </li>
                 </ol>
             </div>
-        </div> 
+        </div>
+        
+        <br>
+        
+        <button type="submit" name="updateImages" id="updateImages">update images</button> 
          
         <br>
         <div>
