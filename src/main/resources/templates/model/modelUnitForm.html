@@ -12,6 +12,7 @@
 	<h2>Spring Boot Adverts</h2>
 
 	<form th:object="${model}" method="post">
+	  <input type="hidden" name="id" th:field="*{id}" />
       <label for="brand">brand:</label>
       <input type="text" th:field="*{brand}"></input><br/>
       <label for="title">model:</label>

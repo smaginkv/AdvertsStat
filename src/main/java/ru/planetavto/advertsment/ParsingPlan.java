@@ -18,6 +18,7 @@ import lombok.Data;
 public class ParsingPlan {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(updatable = false)
 	private Long id;
 	
 	@ManyToOne

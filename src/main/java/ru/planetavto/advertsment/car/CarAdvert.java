@@ -33,29 +33,33 @@ public class CarAdvert implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(updatable = false)
 	private long id;
 	
 	@Column(columnDefinition="Decimal(2,1)")
 	private float engineCapacity;
 	
+	@Column(nullable = false)
 	private int productionYear;
 	
 	@Lob
-	@Column(name="image")
+	@Column(updatable = false)
 	private byte[] image;
 
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "advert_prices", joinColumns = @JoinColumn(name = "advert_id", nullable = false))
 	private List<Price> prices = new ArrayList<>();
 	
-	@ElementCollection(fetch = FetchType.LAZY)
+	@ElementCollection()
 	@CollectionTable(joinColumns = @JoinColumn(name = "advert_id", nullable = false))
+	@Column(updatable = false)
 	private List<AdvertImage> images = new ArrayList<>();
 
-	@ManyToOne
+	@ManyToOne(optional = false)
 	private Model model;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
+	@JoinColumn(updatable = false)
 	private ParsingPlan plan;
 	
 	private String cityOfSale;
@@ -66,6 +70,8 @@ public class CarAdvert implements Serializable {
 	private boolean airConditioning;
 	private boolean esp;
 	private int mileage;
+	
+	@Column(updatable = false)
 	private String ref;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

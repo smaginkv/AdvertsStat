@@ -51,7 +51,6 @@ public class ModelController {
 	
 	@RequestMapping(value = "/{modelId}", method=RequestMethod.POST)
 	public String updateTargetModel(@PathVariable String modelId, Model model) {
-		model.setId(Long.parseLong(modelId));
 		modelRepo.save(model, true);
 		return "redirect:/model";
 	}	

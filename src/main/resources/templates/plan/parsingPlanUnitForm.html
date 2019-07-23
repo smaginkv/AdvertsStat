@@ -12,14 +12,15 @@
 	<h2>Spring Boot Adverts</h2>
 
 	<form th:object="${plan}" method="post">
+	
+		<input type="hidden" name="id" th:field="*{id}" />
+		
 		<label for="model">model:</label> <select th:field="*{model.id}">
 			<option th:each="availableModel : ${allModels}" th:value="${availableModel.id}"
 				th:text="${availableModel}"></option>
 		</select>
 		<br>
 		<br>
-		
-		<input type="hidden" name="id" th:field="*{id}"/>
 		
 		<label for="active">active:</label> 
 		<input type="checkbox" th:field="*{active}"></input>

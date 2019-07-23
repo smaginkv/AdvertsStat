@@ -12,7 +12,7 @@
 <body>
     <div id="header" th:include="page :: header"></div>
 
-    <h2>Spring Boot Adverts</h2>
+    <h2>Advert unit form</h2>
 
     <form th:object="${advert}" method="post" id="advert-form">
         <label for="activity">activity:</label> <input type="checkbox"
@@ -21,17 +21,16 @@
             <option th:each="availableModel : ${allModels}"
                 th:value="${availableModel.id}"
                 th:text="${availableModel}"></option>
-        </select> <br /> <input type="hidden" name="id" th:field="*{id}" /> <input
-            type="hidden" name="image" th:field="*{image}" /> <input
-            type="hidden" name="plan" th:field="*{plan}" /> <input
-            type="hidden" name="ref" th:field="*{ref}" /> <label
-            for="createDate">create date:</label> <input type="date"
-            th:field="*{createDate}"></input> <br /> <label
-            th:if="${advert.changeActivityDate != null}"
-            for="changeActivityDate">activity changed:</label> <input
-            type="date" th:field="*{changeActivityDate}"
-            th:if="${advert.changeActivityDate != null}"></input> <br
-            th:if="${advert.changeActivityDate != null}">
+        </select> <br /> 
+        
+        <input type="hidden" name="id" th:field="*{id}" />
+        
+        <label for="createDate">create date:</label> <input type="date" th:field="*{createDate}"></input>
+        <br />
+       
+        <label th:if="${advert.changeActivityDate != null}" for="changeActivityDate">activity changed:</label>
+        <input type="date" th:field="*{changeActivityDate}" th:if="${advert.changeActivityDate != null}"></input>
+        <br th:if="${advert.changeActivityDate != null}">
 
         <label for="productionYear">production year:</label> <input
             type="text" th:field="*{productionYear}"></input> <br /> <label

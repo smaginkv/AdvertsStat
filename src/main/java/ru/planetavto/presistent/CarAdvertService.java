@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import ru.planetavto.advertsment.AdvertImage;
 import ru.planetavto.advertsment.ParsingPlan;
 import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.presistent.repo.CarAdvertRepository;
@@ -80,5 +81,10 @@ public class CarAdvertService {
 			idArray[adverts.indexOf(advert)] = advert.getId();
 		}
 		return repository.findByIdNotInAndActivityAndPlan(idArray, true, plan);
+	}
+
+	//I have no idea about exclude embedded tables from updated field
+	public List<AdvertImage> getImagesById(long advertId) {
+		return repository.findById(advertId).getImages();
 	}
 }

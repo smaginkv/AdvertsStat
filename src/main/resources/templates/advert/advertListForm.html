@@ -9,7 +9,7 @@
 <body>
 	<div id="header" th:include="page :: header"></div>
 
-    <h1>Spring Boot Adverts</h1>
+    <h1>Adverts list firm</h1>
     <h3 th:if="${#vars['flash.message']}" th:text="${#vars['flash.message']}"></h3>
 
     <form th:action="@{/advert/new}">
@@ -18,6 +18,10 @@
 
 
 	<h3 th:text="${page.number+1} + ' of ' + ${page.totalPages}"></h3>
+	
+	<input type="checkbox">
+	
+	<br>
 	
 	<span th:if="${page.hasPrevious() == true}"><a th:href="@{/advert/(page=${page.number-1})}">Previous  </a></span>
 	<span th:if="${page.hasNext() == true}"><a th:href="@{/advert/(page=${page.number+1})}">Next</a></span>

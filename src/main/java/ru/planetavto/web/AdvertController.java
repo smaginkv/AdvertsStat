@@ -95,7 +95,7 @@ public class AdvertController {
 	
 	@RequestMapping(value = "/advert/{advertId}", params={"saveAdvert"}, method=RequestMethod.POST)
 	public String updateTargetAdvert(@PathVariable long advertId, CarAdvert advert) {
-		advert.setId(advertId);
+		advert.setImages(advertRepo.getImagesById(advertId));
 		advertRepo.save(advert);
 		return "redirect:/advert";
 	}
@@ -109,7 +109,7 @@ public class AdvertController {
 	@RequestMapping(value = "/advert/{advertId}", params={"updateImages"}, method=RequestMethod.POST)
 	public String updateAdvertUmages(@PathVariable long advertId) {
 		parser.saveImagesByAdvert(advertId);		
-		return "redirect:/advert";
+		return "redirect:/advert/"+advertId;
 	}
 	
 	@ModelAttribute("allModels")
