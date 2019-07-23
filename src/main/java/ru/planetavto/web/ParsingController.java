@@ -25,7 +25,7 @@ public class ParsingController {
 
 	@PostMapping
 	public String parse() throws IOException, SQLException {
-		parser.parseAdvertsByAllPlans();		
+		parser.saveAdvertsByAllPlans();		
 		return "parsing";
 		
 	}

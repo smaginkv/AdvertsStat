@@ -1,10 +1,10 @@
-package ru.planetavto.presistent;
+package ru.planetavto.presistent.repo;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import ru.planetavto.parsing.ParsingPlan;
+import ru.planetavto.advertsment.ParsingPlan;
 
 
 public interface ParsingPlanRepository extends CrudRepository<ParsingPlan, Long> {

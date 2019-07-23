@@ -4,10 +4,9 @@
 <title>Spring Boot Adverts</title>
 
 <link rel="stylesheet" href="../../static/main.css" th:href="@{/main.css}" />
-<link rel="stylesheet" href="../../static/my-slider.css" th:href="@{/my-slider.css}"/>
+<link rel="stylesheet" href="../../static/slider.css" th:href="@{/slider.css}"/>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="../../static/ism-2.2.min.js" th:src="@{/ism-2.2.min.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -41,22 +40,30 @@
             for="mileage">mileage:</label> <input type="text"
             th:field="*{mileage}"></input> <br /> <label for="ref">reference:</label>
          <a th:href="*{plan.getExtendRef(ref)}" th:text="*{ref}"
-            target="_blank">reference</a> <br> <br>              
-                
-         <div class='container'>
-            <div class="ism-slider" data-play_type="loop" id="my-slider">
-                <ol>
-                    <li th:each="imageItem,iterImage : *{images}">
-                        <img th:src="*{'/advert_images/'} +${advert.id}+'/'+${iterImage.count-1}" width=900/>
-                        <div class="ism-caption ism-caption-0">My slide caption text</div>
-                    </li>
-                </ol>
-            </div>
-        </div>
-        
-        <br>
-        
-        <button type="submit" name="updateImages" id="updateImages">update images</button> 
+            target="_blank">reference</a> <br> <br>
+
+		<div id="slider" class="slider">
+			<ol class="slider__indicators">
+				<li th:each="image,imageIter : *{images}" class="slider__indicator"
+					th:classappend="${imageIter.count == 1} ? slider__indicator_active"
+					th:data-slide-to="${imageIter.count - 1}"></li>
+			</ol>
+			<div class="slider__items">
+				<div th:each="image,imageIter : *{images}">
+					<div class = "slider__item" th:classappend ="${imageIter.count == 1} ? slider__item_active">
+						<img th:src="*{'/advert_images/'} +${advert.id}+'/'+${imageIter.count-1}" th:alt="${image.title}" width=900 />
+						<div th:text="${image.title}" class="slideText"></div>
+					</div>
+				</div>
+			</div>
+			<a class="slider__control slider__control_prev" href="#"
+				role="button"></a> <a class="slider__control slider__control_next"
+				href="#" role="button"></a>
+		</div>
+
+		<br>
+
+		<button type="submit" name="updateImages" id="updateImages">update images</button> 
          
         <br>
         <div>
@@ -117,6 +124,9 @@
     </form>
 
     <div id="footer" th:include="page :: footer"></div>
+    
+    <script src="../../static/slider.js" th:src="@{/slider.js}"></script>
+    
 </body>
 <script>
 	$(document).ready(function() {

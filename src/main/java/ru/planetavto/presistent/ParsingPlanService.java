@@ -7,7 +7,8 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.planetavto.parsing.ParsingPlan;
+import ru.planetavto.advertsment.ParsingPlan;
+import ru.planetavto.presistent.repo.ParsingPlanRepository;
 
 @Service
 public class ParsingPlanService {

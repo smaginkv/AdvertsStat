@@ -22,8 +22,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
 import ru.planetavto.advertsment.AdvertImage;
 import ru.planetavto.advertsment.Model;
+import ru.planetavto.advertsment.ParsingPlan;
 import ru.planetavto.advertsment.Price;
-import ru.planetavto.parsing.ParsingPlan;
 
 @Entity
 @Data

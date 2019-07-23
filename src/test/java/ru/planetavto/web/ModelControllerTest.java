@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 
 import ru.planetavto.advertsment.Model;
-import ru.planetavto.presistent.ModelRepository;
+import ru.planetavto.presistent.repo.ModelRepository;
 
 public class ModelControllerTest {
 	

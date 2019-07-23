@@ -24,7 +24,7 @@ import ru.planetavto.advertsment.Price;
 import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.parsing.ParsingOkami;
 import ru.planetavto.presistent.CarAdvertService;
-import ru.planetavto.presistent.ModelRepository;
+import ru.planetavto.presistent.repo.ModelRepository;
 
 @Controller
 public class AdvertController {
@@ -108,7 +108,7 @@ public class AdvertController {
 	
 	@RequestMapping(value = "/advert/{advertId}", params={"updateImages"}, method=RequestMethod.POST)
 	public String updateAdvertUmages(@PathVariable long advertId) {
-		parser.parseImagesByAdvert(advertId);		
+		parser.saveImagesByAdvert(advertId);		
 		return "redirect:/advert";
 	}
 	

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ru.planetavto.presistent.UserRepository;
+import ru.planetavto.presistent.repo.UserRepository;
 import ru.planetavto.security.RegistrationForm;
 
 @Controller

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import ru.planetavto.advertsment.AdvertImage;
+import ru.planetavto.advertsment.ParsingPlan;
 import ru.planetavto.advertsment.Price;
 import ru.planetavto.advertsment.car.CarAdvert;
 import ru.planetavto.messaging.JmsAdvertMessagingService;
@@ -35,6 +36,12 @@ public class ParsingOkami {
 	private ParsingPlanService planRepo;
 	private JmsAdvertMessagingService messaging;
 	
+	private CarAdvert advert;
+	private String advertSeparator = "col-lg-3 col-md-4 col-sm-6";
+	private String pathToImage = "https://photos.okami-market.ru/images/auto/large/";
+	private String primaryImage = "-exterior-front.jpg";
+	private String imageSeparator = "fancybox";
+	
 	@Autowired
 	public ParsingOkami(CarAdvertService advertRepo, ParsingPlanService planRepo, JmsAdvertMessagingService messaging) {
 		this.advertRepo = advertRepo;
@@ -42,14 +49,7 @@ public class ParsingOkami {
 		this.messaging = messaging;
 	}
 
-	private CarAdvert advert;
-
-	private String advertSeparator = "col-lg-3 col-md-4 col-sm-6";
-	private String pathToImage = "https://photos.okami-market.ru/images/auto/large/";
-	private String primaryImage = "-exterior-front.jpg";
-	private String imageSeparator = "fancybox";
-
-	public void parseAdvertsByAllPlans() {
+	public void saveAdvertsByAllPlans() {
 
 		List<ParsingPlan> plans = planRepo.findAllActive();
 		for (ParsingPlan plan : plans) {
@@ -60,27 +60,33 @@ public class ParsingOkami {
 		}		
 	}
 	
-	public void parseImagesByAdvert(long advertId) {
+	private void setAdvertImages() {
+		if (advert.getImages().size() > 0) {
+			return;
+		}
+		
 		Document doc;
-		advert = advertRepo.findById(advertId);
-
 		try {
-			doc = Jsoup.connect(advert.getPlan().getPathToAdvert() + advert.getRef()).get();
-
+			doc = connectToImageForm();
 		} catch (IOException e) {
 			// write exception to log
 			return;
 		}
 		
+		parseImagesByAdvert(doc);
+		
+	}
+	
+	private void parseImagesByAdvert(Document doc) {
 		Elements imageItems = doc.body().getElementsByClass(imageSeparator);
 		List<AdvertImage> images = new ArrayList<>();
 		for (Element imageItem : imageItems) {
 
-			try {				
+			try {
 				String pathToImage = imageItem.attr("href");
-				
+
 				AdvertImage image = new AdvertImage();
-				image.setTitle("0");
+				image.setTitle(getTitle(pathToImage));
 				image.setImage(getImage(pathToImage));
 				images.add(image);
 			} catch (ParseException e) {
@@ -88,6 +94,24 @@ public class ParsingOkami {
 			}
 		}
 		advert.setImages(images);
+	}	
+	
+	private Document connectToImageForm() throws IOException {
+		return Jsoup.connect(advert.getPlan().getPathToAdvert() + advert.getRef()).get();
+	}
+	
+	public void saveImagesByAdvert(long advertId) {		
+		advert = advertRepo.findById(advertId);
+		
+		Document doc;
+		try {
+			doc = connectToImageForm();
+		} catch (IOException e) {
+			// write exception to log
+			return;
+		}
+		parseImagesByAdvert(doc);
+		
 		advertRepo.save(advert);
 	}
 	
@@ -98,8 +122,7 @@ public class ParsingOkami {
 		do {
 			
 			try {
-				doc = Jsoup.connect(plan.getUrl()+index++).get();
-
+				doc = Jsoup.connect(plan.getUrl()+index++).get();				
 			} catch (IOException e) {
 				// write exception to log
 				continue;
@@ -121,18 +144,8 @@ public class ParsingOkami {
 		Elements carsDiv = doc.body().getElementsByClass(advertSeparator);
 		for (Element carDiv : carsDiv) {
 			try {
-				advert = getAdvert(carDiv);
-				
-				setAdvertImage();
-				setEngineCapacity(carDiv);
-				setProductionYear(carDiv);
-				setMilage(carDiv);
-				setPrice(carDiv);				
-				advert.setModel(plan.getModel());
-				advert.setPlan(plan);
-				
-				advertRepo.save(advert);
-				
+				advert = getAdvert(carDiv, plan);			
+				advertRepo.save(advert);				
 				advertList.add(advert);
 			} catch (ParseException e) {
 				// write exception to log
@@ -161,7 +174,7 @@ public class ParsingOkami {
 
 	}
 
-	private CarAdvert getAdvert(Element carDiv) throws ParseException {
+	private CarAdvert getAdvert(Element carDiv, ParsingPlan plan) throws ParseException {
 
 		String ref = getRef(carDiv);
 		try {
@@ -173,7 +186,20 @@ public class ParsingOkami {
 			//need to intermediate structure that have all information about new advert
 			messaging.sendAdvert("new advert");
 		}
+		
+		populateAdvert(carDiv, plan);
 		return advert;
+	}
+	
+	private void populateAdvert(Element carDiv, ParsingPlan plan) throws ParseException {
+		setEngineCapacity(carDiv);
+		setProductionYear(carDiv);
+		setMilage(carDiv);
+		setPrice(carDiv);				
+		advert.setModel(plan.getModel());
+		advert.setPlan(plan);
+		setAdvertImage();
+		setAdvertImages();
 	}
 
 	private void setAdvertImage() {
@@ -202,6 +228,12 @@ public class ParsingOkami {
 		}
 		
 		return jpgContent.toByteArray();		
+	}
+	
+	private String getTitle(String pathToImage) {
+		//looking value within !!!
+		//https://photos.okami-market.ru/images/auto/extra/hyundai-solaris-11732-!!!exterior-front!!!.jpg
+		return pathToImage.replaceAll(".+/"+advert.getRef()+"-([\\w|-]+).+", "$1");
 	}
 
 	private void setEngineCapacity(Element carDiv) {

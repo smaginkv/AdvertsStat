@@ -1,4 +1,4 @@
-package ru.planetavto.presistent;
+package ru.planetavto.presistent.repo;
 
 import org.springframework.data.repository.CrudRepository;
 

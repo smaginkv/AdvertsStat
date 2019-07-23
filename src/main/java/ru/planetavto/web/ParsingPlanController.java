@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ru.planetavto.parsing.ParsingPlan;
-import ru.planetavto.presistent.ModelRepository;
+import ru.planetavto.advertsment.ParsingPlan;
 import ru.planetavto.presistent.ParsingPlanService;
+import ru.planetavto.presistent.repo.ModelRepository;
 
 @Controller
 @RequestMapping(value = "/plan")

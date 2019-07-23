@@ -10,8 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import ru.planetavto.advertsment.ParsingPlan;
 import ru.planetavto.advertsment.car.CarAdvert;
-import ru.planetavto.parsing.ParsingPlan;
+import ru.planetavto.presistent.repo.CarAdvertRepository;
 
 @Service
 public class CarAdvertService {

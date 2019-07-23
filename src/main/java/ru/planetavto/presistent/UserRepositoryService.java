@@ -1,4 +1,4 @@
-package ru.planetavto.security;
+package ru.planetavto.presistent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,7 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import ru.planetavto.presistent.UserRepository;
+import ru.planetavto.presistent.repo.UserRepository;
+import ru.planetavto.security.User;
 
 @Service
 public class UserRepositoryService 

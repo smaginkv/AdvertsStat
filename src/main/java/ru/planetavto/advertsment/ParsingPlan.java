@@ -1,4 +1,4 @@
-package ru.planetavto.parsing;
+package ru.planetavto.advertsment;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +12,6 @@ import javax.persistence.ManyToOne;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
-import ru.planetavto.advertsment.Model;
 
 @Entity
 @Data
